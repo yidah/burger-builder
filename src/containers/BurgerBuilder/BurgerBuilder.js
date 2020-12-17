@@ -15,9 +15,6 @@ import * as actionTypes from '../../store/actions';
 
 class BurgerBuilder extends Component {
   state = {
-    // ingredients: null,
-    // totalPrice: 4,
-    // purchaseable: false,
     purchasing: false,
     loading: false,
   };
@@ -44,32 +41,6 @@ class BurgerBuilder extends Component {
       }, 0);
     return sum > 0;
   }
-  // addIngredientHandler = (type) => {
-  //   const oldCount = this.state.ingredients[type];
-  //   const updatedCount = oldCount + 1;
-  //   const updatedIngredients = { ...this.state.ingredients };
-  //   updatedIngredients[type] = updatedCount;
-  //   const priceAddition = INGREDIENT_PRICES[type];
-  //   const oldPrice = this.state.totalPrice;
-  //   const newPrice = oldPrice + priceAddition;
-  //   this.setState({ totalPrice: newPrice, ingredients: updatedIngredients });
-  //   this.updatePurachaseableState(updatedIngredients);
-  // };
-
-  // removeIngredientHandler = (type) => {
-  //   const oldCount = this.state.ingredients[type];
-  //   if (oldCount <= 0) {
-  //     return;
-  //   }
-  //   const updatedCount = oldCount - 1;
-  //   const updatedIngredients = { ...this.state.ingredients };
-  //   updatedIngredients[type] = updatedCount;
-  //   const priceDeduction = INGREDIENT_PRICES[type];
-  //   const oldPrice = this.state.totalPrice;
-  //   const newPrice = oldPrice - priceDeduction;
-  //   this.setState({ totalPrice: newPrice, ingredients: updatedIngredients });
-  //   this.updatePurachaseableState(updatedIngredients);
-  // };
 
   purchaseHandler = () => {
     this.setState({ purchasing: true });
@@ -80,20 +51,21 @@ class BurgerBuilder extends Component {
   };
 
   purchaseContinueHandler = () => {
+    this.props.history.push('/checkout');
 
-    const queryParams = [];
-    for(let i in this.state.ingredients){
-      // encodes element so this can be used in a URL
-      queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
-    }
-    queryParams.push('price=' + this.state.totalPrice);
-    const queryString = queryParams.join('&');
+    // const queryParams = [];
+    // for(let i in this.state.ingredients){
+    //   // encodes element so this can be used in a URL
+    //   queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
+    // }
+    // queryParams.push('price=' + this.state.totalPrice);
+    // const queryString = queryParams.join('&');
 
-    // This will create something like this http://localhost:3000/checkout?bacon=1&cheese=1&meat=0&salad=1
-    this.props.history.push({
-      pathname:'/checkout',
-      search:'?' + queryString
-    });
+    // // This will create something like this http://localhost:3000/checkout?bacon=1&cheese=1&meat=0&salad=1
+    // this.props.history.push({
+    //   pathname:'/checkout',
+    //   search:'?' + queryString
+    // });
   };
 
   render() {
