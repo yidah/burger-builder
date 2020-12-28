@@ -6,6 +6,8 @@ import axios from '../../../axios-orders';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Input/Input';
 import { connect } from 'react-redux';
+import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
+import * as orderActions from '../../../store/actions/index';
 
 class ContactData extends Component {
   state = {
@@ -91,7 +93,6 @@ class ContactData extends Component {
       },
     },
     formIsValid:false,
-    loading: false,
   };
 
   checkValidity(value, rules){
@@ -122,7 +123,7 @@ class ContactData extends Component {
     event.preventDefault();
     // console.log(this.props.ingredients);
     // Enables spinner
-    this.setState({ loading: true });
+    // this.setState({ loading: true });
 
     const formData={};
     for(let formElementIdentifier in this.state.orderForm){
@@ -136,22 +137,25 @@ class ContactData extends Component {
     };
 
     console.log(order);
-    // Firebase uses a MongoDB structure, so we do not have tables but json like nested structure
-    // the syntax below create orders node and store orders beneath the node
-    // .json is for Firebase only
-    axios
-      .post('/orders.json', order)
-      .then((response) => {
-        //console.log(response)
-        // stop spinner (loading) and hide modal (purchasing)
-        this.setState({ loading: false });
-        this.props.history.push('/');
-      })
-      .catch((error) => {
-        // console.log(error)
-        // stop spinner (loading) and hide modal (purchasing)
-        this.setState({ loading: false });
-      });
+    // handled with action creators and redux-thunk 
+    this.props.onOrderBurger(order);
+    
+    // // Firebase uses a MongoDB structure, so we do not have tables but json like nested structure
+    // // the syntax below create orders node and store orders beneath the node
+    // // .json is for Firebase only
+    // axios
+    //   .post('/orders.json', order)
+    //   .then((response) => {
+    //     //console.log(response)
+    //     // stop spinner (loading) and hide modal (purchasing)
+    //     this.setState({ loading: false });
+    //     this.props.history.push('/');
+    //   })
+    //   .catch((error) => {
+    //     // console.log(error)
+    //     // stop spinner (loading) and hide modal (purchasing)
+    //     this.setState({ loading: false });
+    //   });
   };
   inputChangedHandler =(event, inputIdentifier)=>{
     // console.log(event.target.value); // checking if inputs get the onchange event when introducing something
@@ -215,7 +219,7 @@ class ContactData extends Component {
       </form>
     );
 
-    if (this.state.loading) {
+    if (this.props.loading) {
       form = <Spinner />;
     }
 
@@ -230,9 +234,16 @@ class ContactData extends Component {
 
 const mapStateToProps = state=>{
   return{
-    ings: state.ingredients,
-    price: state.totalPrice
+    ings: state.burgerBuilder.ingredients,
+    price: state.burgerBuilder.totalPrice,
+    loading: state.order.loading
   }
 }
 
-export default connect(mapStateToProps)(ContactData);
+const mapDispatchToProps=dispatch=>{
+  return{
+    onOrderBurger: (orderData)=> dispatch(orderActions.purchaseBurger(orderData))
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(withErrorHandler(ContactData,axios));
