@@ -22,7 +22,22 @@ export const authFail = (error)=>{
     }
 }
 
-// handles async code
+export const logout = () =>{
+    return{
+        type:actionTypes.AUTH_LOGOUT,
+    }
+}
+
+// ASYNC CODE ACTIONS
+export const checkAuthTimeout =(expirationTime)=>{
+    return dispatch => {
+        setTimeout(() => {
+            dispatch(logout());            
+        }, expirationTime * 1000); // *1000 to turn my seconds in milliseconds
+
+    }
+}
+
 export const auth = (email, password, isSignup)=>{
     return dispatch=> {
         dispatch(authStart());
@@ -41,6 +56,7 @@ export const auth = (email, password, isSignup)=>{
         .then(response=>{
             console.log(response)
             dispatch(authSuccess(response.data.idToken, response.data.localId))
+            dispatch(checkAuthTimeout(response.data.expiresIn));
         })
         .catch(err=>{
             console.log(err.response);

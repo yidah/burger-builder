@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 import * as orderActions from '../../../store/actions/index';
 
+
 class ContactData extends Component {
   state = {
     orderForm: {
@@ -138,7 +139,7 @@ class ContactData extends Component {
 
     console.log(order);
     // handled with action creators and redux-thunk 
-    this.props.onOrderBurger(order);
+    this.props.onOrderBurger(order, this.props.token);
     
     // // Firebase uses a MongoDB structure, so we do not have tables but json like nested structure
     // // the syntax below create orders node and store orders beneath the node
@@ -236,13 +237,14 @@ const mapStateToProps = state=>{
   return{
     ings: state.burgerBuilder.ingredients,
     price: state.burgerBuilder.totalPrice,
-    loading: state.order.loading
+    loading: state.order.loading,
+    token:state.auth.token
   }
 }
 
 const mapDispatchToProps=dispatch=>{
   return{
-    onOrderBurger: (orderData)=> dispatch(orderActions.purchaseBurger(orderData))
+    onOrderBurger: (orderData, token)=> dispatch(orderActions.purchaseBurger(orderData, token))
   }
 }
 
