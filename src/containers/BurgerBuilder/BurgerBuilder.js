@@ -47,6 +47,9 @@ class BurgerBuilder extends Component {
     if(this.props.isAuthenticated){
       this.setState({ purchasing: true });
     }else{
+      // this is where the user should go after authenticating 
+      // this is also set in our navigation authenticate option if the user clicks there
+      this.props.onSetAuthRedirectPath('/checkout');
       // history comes from React Router
       this.props.history.push('/auth');
     }
@@ -137,7 +140,8 @@ const mapDispatchToProps = dispatch=> {
     onIngredientAdded:(ingName) => dispatch(actions.addIngredient(ingName)),
     onIngredientRemoved:(ingName) => dispatch(actions.removeIngredient(ingName)),
     onInitIngredients:()=>dispatch(actions.initIngredients()),
-    onInitPruchase:()=>dispatch(actions.purchaseInit())
+    onInitPruchase:()=>dispatch(actions.purchaseInit()),
+    onSetAuthRedirectPath:(path)=> dispatch(actions.setAuthRedirectPath(path))
   }
 
 }
