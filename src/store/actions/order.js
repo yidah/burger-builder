@@ -67,10 +67,13 @@ export const fetchOrdersStart=()=>{
     }
 }
 
-export const fetchedOrders=(token)=>{
+export const fetchedOrders=(token, userId)=>{
     return dispatch =>{
         dispatch(fetchOrdersStart());
-        axios.get('/orders.json?auth=' + token)
+
+        // orderBy another parameter understood by Firebase
+        const queryParams = '?auth=' + token + '&orderBy="userId"&equalTo="' + userId + '"';
+        axios.get('/orders.json' + queryParams)
         .then(res =>{
             console.log(res.data);
             // Firebase objects
