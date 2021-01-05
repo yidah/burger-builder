@@ -13,7 +13,7 @@ class Orders extends Component {
   };
 
   componentDidMount() {
-    this.props.onFetchOrders(this.props.token);
+    this.props.onFetchOrders(this.props.token, this.props.userId);
 
     // Handled this code with Redux reducer (order)  see above
     // axios.get('/orders.json')
@@ -59,13 +59,14 @@ const mapStateToProps = (state) => {
   return {
     orders: state.order.orders,
     loading: state.order.loading,
-    token:state.auth.token
+    token:state.auth.token,
+    userId:state.auth.userId
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onFetchOrders: (token) => dispatch(actions.fetchedOrders(token)),
+    onFetchOrders: (token, userId) => dispatch(actions.fetchedOrders(token, userId)),
   };
 };
 
