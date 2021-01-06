@@ -13,7 +13,7 @@ class Modal extends Component{
   }
   // to confirm that this works we use comp
   componentWillUpdate(){
-    console.log('[Modal] WillUpdate')
+    // console.log('[Modal] WillUpdate')
   }
   render(){
     return(  <Auxi>

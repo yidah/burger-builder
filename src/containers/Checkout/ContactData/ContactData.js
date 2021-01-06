@@ -8,6 +8,7 @@ import Input from '../../../components/UI/Input/Input';
 import { connect } from 'react-redux';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 import * as orderActions from '../../../store/actions/index';
+import { updateObject, checkValidity } from '../../../shared/utility';
 
 
 class ContactData extends Component {
@@ -96,30 +97,6 @@ class ContactData extends Component {
     formIsValid:false,
   };
 
-  checkValidity(value, rules){
-    let isValid = true;
-
-    // In case we do not defined validation properties in any of our "orderForm" objects
-    // otherwise we get an undefined error  
-    // We have also added  "validation:{}," to deliveryMethod object in "orderForm" but 
-    // therefore the rule below is for double security
-    if(!rules){
-      return true;
-    }
-
-    // adding "&& isValid" force the value to comply with all rules in order to be valid
-    if(rules.required){
-      isValid = value.trim() !== '' && isValid;
-    }
-    if(rules.minLength){
-      isValid=value.length >= rules.minLength && isValid;
-    }
-    if(rules.maxLength){
-      isValid=value.length <= rules.maxLength && isValid;
-    }
-    return isValid;
-  }
-
   orderHandler = (event) => {
     event.preventDefault();
     // console.log(this.props.ingredients);
@@ -130,7 +107,7 @@ class ContactData extends Component {
     for(let formElementIdentifier in this.state.orderForm){
       formData[formElementIdentifier]= this.state.orderForm[formElementIdentifier].value;
     }
-    console.log(formData);
+    // console.log(formData);
     const order = {
       ingredients: this.props.ings,
       price: this.props.price,
@@ -138,7 +115,7 @@ class ContactData extends Component {
       userId:this.props.userId
     };
 
-    console.log(order);
+    // console.log(order);
     // handled with action creators and redux-thunk 
     this.props.onOrderBurger(order, this.props.token);
     
@@ -162,21 +139,36 @@ class ContactData extends Component {
   inputChangedHandler =(event, inputIdentifier)=>{
     // console.log(event.target.value); // checking if inputs get the onchange event when introducing something
     
-    // Cloning deeply orderForm object first level 
-    // (objects are reference values we do not want to change directly this.state.orderForm) 
-    const updatedOrderForm = {
-      ...this.state.orderForm
-    }
-    // Cloning deeply orderForm object second level to reach value property
-    const updatedFormElement ={
-      ...updatedOrderForm[inputIdentifier]
-    }
 
-    updatedFormElement.value= event.target.value;
-    updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation)
-    updatedFormElement.touched=true;
-    updatedOrderForm[inputIdentifier]=updatedFormElement;
-    console.log(updatedFormElement);
+    //USING UTILITY FUNCTION updateObject.
+    const updatedFormElement = updateObject(this.state.orderForm[inputIdentifier], {
+      value: event.target.value,
+      valid: checkValidity(event.target.value, this.state.orderForm[inputIdentifier].validation),
+      touched: true
+    })
+
+    const updatedOrderForm = updateObject(this.state.orderForm, {
+      //inputIdentifier = control such as name,street etc
+      [inputIdentifier]: updatedFormElement
+
+    })
+
+    // // NOT USING UTILITY FUNCTION updateObject. Cloning deeply orderForm object first level 
+    // // (objects are reference values we do not want to change directly this.state.orderForm) 
+    // const updatedOrderForm = {
+    //   ...this.state.orderForm
+    // }
+    // // Cloning deeply orderForm object second level to reach value property
+    // const updatedFormElement ={
+    //   ...updatedOrderForm[inputIdentifier]
+    // }
+
+    // updatedFormElement.value= event.target.value;
+    // updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation)
+    // updatedFormElement.touched=true;
+
+    // updatedOrderForm[inputIdentifier]=updatedFormElement;
+    // console.log(updatedFormElement);
   
     let formIsValid =true;
     for(let inputIdentifier in updatedOrderForm){
@@ -184,7 +176,7 @@ class ContactData extends Component {
 
     }
 
-    console.log(formIsValid);
+    // console.log(formIsValid);
 
 
     this.setState({orderForm:updatedOrderForm, formIsValid:formIsValid});

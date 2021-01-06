@@ -13,7 +13,7 @@ const sideDrawer = (props) => {
   return (
     <Auxi>
         <Backdrop show={props.open} clicked={props.closed}/>
-      <div className={attachedClasses.join(' ')}>
+      <div className={attachedClasses.join(' ')} onClick={props.closed}>
         {/* I can use classes.Logo defined in my SideDrawer.css without interfering with the Logo styles in Logo.css 
             as I am using css modules and this creates a unique name for each class I create */}
         <div className={classes.Logo}>

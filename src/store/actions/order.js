@@ -20,7 +20,7 @@ export const purchaseBurger =(orderData, token)=>{
         dispatch(purchaseBurgerStart());
         axios.post('/orders.json?auth=' + token, orderData)
         .then((response) => {
-          console.log(response.data)
+          //console.log(response.data)
           dispatch(purchaseBurgerSuccess(response.data.name, orderData))
           
         })
@@ -75,7 +75,7 @@ export const fetchedOrders=(token, userId)=>{
         const queryParams = '?auth=' + token + '&orderBy="userId"&equalTo="' + userId + '"';
         axios.get('/orders.json' + queryParams)
         .then(res =>{
-            console.log(res.data);
+            // console.log(res.data);
             // Firebase objects
             // -MOHcRcNIpnCR661NEaX: {customer: {…}, deliveryMethod: "By moto", ingredients: {…}, price: "6.9"}
             // -MOHcaT4c90p68VKKSNi: {customer: {…}, deliveryMethod: "By moto", ingredients: {…}, price: "5.5"}

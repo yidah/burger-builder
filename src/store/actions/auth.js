@@ -52,7 +52,7 @@ export const auth = (email, password, isSignup)=>{
             password:password,
             returnSecureToken:true
         }
-        console.log(authData);
+        // console.log(authData);
         let url= 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyC1tP6nVnk_dn2XtoKFczcbnp40Y6HFJhQ';
         if(!isSignup){
             url='https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyC1tP6nVnk_dn2XtoKFczcbnp40Y6HFJhQ';
@@ -60,7 +60,7 @@ export const auth = (email, password, isSignup)=>{
         }
         axios.post(url,authData)
         .then(response=>{
-            console.log(response)
+            // console.log(response)
             // we need to know when the token expires and only to know the seconds (response.data.expiresIn) is not enough 
             // response.data.expiresIn is given in seconds but JavaScript works in milliseconds
             const expirationDate = new Date (new Date().getTime() + response.data.expiresIn * 1000) // this will give use the current date plus seconds
@@ -76,7 +76,7 @@ export const auth = (email, password, isSignup)=>{
             dispatch(checkAuthTimeout(response.data.expiresIn));
         })
         .catch(err=>{
-            console.log(err.response);
+            // console.log(err.response);
             dispatch(authFail(err.response.data.error));
         })
     }
